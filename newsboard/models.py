@@ -16,12 +16,17 @@ STREAM_TYPES = [(k, v) for a, k, v in settings.STREAM_TYPES]
 @python_2_unicode_compatible
 class Stream(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("name"))
+    # description = models.TextField(max_length=2000, verbose_name=_("description"))
     type = models.CharField(max_length=20, choices=STREAM_TYPES, verbose_name=_('type'))
     remote_id = models.CharField(max_length=200, verbose_name=_("remote ID"))
 
     # main_url = models.URLField(blank=True, null=True, default=None, verbose_name=_("main URL"))
     # last_updated = models.DateTimeField(blank=True, null=True, default=None, verbose_name=_("last updated"))
+
     # auto_enabled = models.BooleanField(default=False, verbose_name=_("auto update enabled")
+    # auto_frequency = model.PositiveIntegerField(verbose_name=_("auto update frequency", help_text=_("each x minute")
+
+    # is_public = models.BooleanField(default=False, verbose_name=_("public")
 
     class Meta:
         app_label = 'newsboard'
