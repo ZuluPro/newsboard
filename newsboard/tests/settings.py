@@ -59,4 +59,9 @@ TEMPLATES = [
 
 STATIC_URL = '/static/'
 
+CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://127.0.0.1:6379/0')
+# CELERY_BROKER_TRANSPORT = os.environ.get('BROKER_TRANSPORT', 'djkombu.transport.DatabaseTransport')
+# CELERY_RESULT_BACKEND = os.environ.get('BROKER_TRANSPORT', )
+CELERY_ALWAYS_EAGER = True
+
 NEWSBOARD_FACEBOOK_TOKEN = os.environ.get('NEWSBOARD_FACEBOOK_TOKEN')

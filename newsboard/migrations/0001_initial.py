@@ -27,8 +27,13 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100, verbose_name='name')),
-                ('type', models.CharField(max_length=20, verbose_name='type', choices=[(b'rss', 'RSS'), (b'facebook', 'Facebook')])),
+                ('description', models.TextField(max_length=2000, null=True, verbose_name='description', blank=True)),
+                ('type', models.CharField(max_length=20, verbose_name='type', choices=[(b'rss', 'RSS'), (b'sitemap', 'Sitemap'), (b'facebook', 'Facebook')])),
                 ('remote_id', models.CharField(max_length=200, verbose_name='remote ID')),
+                ('main_url', models.URLField(default=None, null=True, verbose_name='main URL', blank=True)),
+                ('last_updated', models.DateTimeField(default=None, null=True, verbose_name='last updated', blank=True)),
+                ('auto_enabled', models.BooleanField(default=False, verbose_name='auto update enabled')),
+                ('auto_frequency', models.PositiveIntegerField(default=15, help_text='each x minute', verbose_name='auto update frequency')),
             ],
             options={
                 'verbose_name': 'stream',

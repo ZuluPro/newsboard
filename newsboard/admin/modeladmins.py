@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from dj_web_rich_object.admin.modeladmins import WebRichObjectAdmin
+from newsboard import tasks
 
 
 class StreamAdmin(admin.ModelAdmin):
@@ -9,8 +10,8 @@ class StreamAdmin(admin.ModelAdmin):
     actions = ('update',)
 
     def update(self, request, queryset):
-        for stream in queryset:
-            stream.update()
+        stream_ids = list(queryset.values_list('id', flat=True))
+        tasks.update_streams.delay(stream_ids)
     update.short_description = _("Update selected streams")
 
 
