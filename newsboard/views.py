@@ -9,3 +9,11 @@ class StreamListView(ListView):
 
     def get_queryset(self):
         return self.model.objects.all()
+
+
+class PostListView(ListView):
+    model = models.Post
+    template_name = 'newsboard/posts.html'
+
+    def get_queryset(self):
+        return self.model.objects.order_by('-updated_at')

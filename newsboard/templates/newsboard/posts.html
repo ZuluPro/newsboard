@@ -1,0 +1,22 @@
+{% extends "newsboard/base.html" %}
+{% load i18n %}
+
+{% block newsboard_content %}
+<ul class="posts">
+{% for post in object_list %}
+  <li>
+    <div class="post">
+    {{ post.get_widget|safe }}
+
+    <small>
+      {% trans "From:" %}
+      {% for stream in post.streams.all %}
+      {{ stream }}
+      {% if not forloop.last %} | {% endif %}
+      {% endfor %}
+    </small>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

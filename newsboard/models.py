@@ -52,6 +52,8 @@ class Stream(models.Model):
         return self.post_set.all().order_by('-updated_at')[:settings.DISPLAY_LIMIT]
 
     def need_update(self):
+        if self.last_updated is None:
+            return True
         expiration = self.last_updated + timedelta(seconds=self.auto_frequency*60)
         return now() > expiration
 

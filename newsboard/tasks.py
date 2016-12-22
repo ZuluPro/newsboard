@@ -13,7 +13,7 @@ logger = getLogger("newsboard")
 def update_stream(stream_id):
     stream = models.Stream.objects.get(id=stream_id)
     lock = Lock('update_stream', stream_id)
-    if not lock.is_locked:
+    if lock.is_locked:
         logger.debug('Locked %s' % stream)
         return
     logger.debug('Updating %s' % stream)
@@ -31,7 +31,7 @@ def update_streams(stream_ids):
 @shared_task
 def update_all_streams():
     lock = Lock('update_all_streams')
-    if not lock.is_locked:
+    if lock.is_locked:
         return
     streams = models.Stream.objects.filter(auto_enabled=True)
     stream_ids = []

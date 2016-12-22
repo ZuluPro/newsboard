@@ -1,10 +1,19 @@
 from __future__ import absolute_import
+
 from datetime import timedelta, datetime
+try:
+    from urllib import quote
+except ImportError:
+    from urllib2 import quote
+
 import facebook
+
+from django.template import defaultfilters
+
 from newsboard.feeds.base import BaseFeed
 from newsboard import settings
 
-FEEDS_Q = '%s?fields=feed.limit(%s){picture,updated_time,description,caption,created_time,permalink_url,from,type,attachments{description,title,type,media,description_tags,url},source,message,message_tags}'
+FEEDS_Q = '%s?fields=feed.limit(%s){picture,updated_time,description,caption,created_time,permalink_url,from,type,attachments{description,title,type,media,description_tags,url},source,message,message_tags,full_picture}'
 
 
 def get_facebook_api(token=None):
@@ -38,33 +47,38 @@ class FacebookFeed(BaseFeed):
             'base_url': entry['permalink_url'],
         }
         if entry['type'].startswith('video'):
+            embed_video = 'https://www.facebook.com/plugins/video.php?href='
+            embed_video += quote(entry['attachments']['data'][0]['url'])
             attrs.update({
-                'description': entry['description'],
-                # 'url': entry['attachments']['data'][0]['media']['image']['src'],
+                'title': defaultfilters.truncatewords(entry['description'], 300),
+                'video': embed_video,
                 'image': entry['attachments']['data'][0]['media']['image']['src'],
+                'description': None,
             })
         elif entry['type'] == 'status':
-            if 'title' in entry:
-                attrs['title'] = entry['message'][:100],
-            if 'message' in entry:
-                attrs['description'] = entry['message'][:300],
+            attrs['description'] = None
+            if entry.get('message'):
+                attrs['title'] = defaultfilters.truncatewords(entry['message'], 300)
         elif entry['type'] == 'link':
-            attrs.update({
-                'image': entry['attachments']['data'][0]['media']['image']['src'],
-            })
-        elif entry['type'] == 'photo':
+            if entry.get('description'):
+                attrs['title'] = entry['description']
+                attrs['description'] = None
             if 'media' in entry['attachments']['data'][0]:
+                if 'image' in entry['attachments']['data'][0]['media']:
+                    attrs['image'] = entry['attachments']['data'][0]['media']['image']['src']
+        elif entry['type'] == 'photo':
+            # Guess image
+            if entry.get('full_picture'):
+                attrs['image'] = entry['full_picture']
+            elif 'media' in entry['attachments']['data'][0]:
                 attrs['image'] = entry['attachments']['data'][0]['media']['image']['src']
             elif 'link' in entry:
                 attrs['image'] = entry['link']
-        if entry.get('attachments') and entry['attachments']['data']:
-            if 'title' not in attrs:
-                if 'title' in entry['attachments']['data'][0]:
-                    attrs['title'] = entry['attachments']['data'][0]['title']
-                if 'title' not in attrs and 'message' in entry:
-                    attrs['title'] = entry['message'][:100]
-                if 'title' not in attrs and 'description' in entry:
-                    attrs['title'] = entry['description'][:100]
-            if 'description' in entry['attachments']['data'][0]:
-                attrs['description'] = entry['attachments']['data'][0]['description']
+            if entry.get('message'):
+                attrs['description'] = None
+                attrs['title'] = defaultfilters.truncatewords(entry['message'], 300)
+            # Guess description
+            if 'description' in entry:
+                if attrs.get('title') != entry['description']:
+                    attrs['description'] = entry['description']
         return attrs

@@ -1,17 +1,23 @@
 {% extends "newsboard/base.html" %}
+{% load i18n %}
 
 {% block newsboard_content %}
-<ul>
+<ul class="streams">
 {% for stream in object_list %}
   <li>
+    <h3>
     {% if stream.main_url %}
     <a href="{{ stream.main_url }}">{{ stream.name }}</a>
     {% else %}
     {{ stream.name }}:
     {% endif %}
+    </h3>
     <ul>
     {% for post in stream.last_posts %}
-    <li><a href="{{ post.url }}">{{ post }}</a></li>
+    <hr>
+    <li><a href="{{ post.url }}">{{ post.title|truncatechars:75 }}</a></li>
+    {% empty %}
+    <li>{% trans "(Empty)" %}</li>
     {% endfor %}
     </ul>
   </li>

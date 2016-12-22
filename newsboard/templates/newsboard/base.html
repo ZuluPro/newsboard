@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,6 +15,13 @@
       h2 span { font-size:80%; color:#666; font-weight:normal; }
       h3 { margin:1em 0 .5em 0; }
       h4 { margin:0 0 .5em 0; font-weight: normal; }
+      a {
+        color: #808080;
+        text-decoration: none;
+      }
+      a:hover {
+        color: #606060;
+      }
       table { border:1px solid #ccc; border-collapse: collapse; width:100%; background:white; }
       tbody td, tbody th { vertical-align:top; padding:2px 3px; }
       thead th {
@@ -23,15 +31,54 @@
       tbody th { width:12em; text-align:right; color:#666; padding-right:.5em; }
       #summary { background: #e0ebff; }
       #summary h2 { font-weight: normal; color: #666; }
-      #content { background:#eee; }
+      #content {
+        background:#eee;
+        overflow: auto;
+      }
       #footer { background:#f6f6f6; }
       #summary table { border:none; background:transparent; }
+      ul.streams {list-style: none;}
+      ul.streams>li {
+        width: 22%;
+        float: left;
+        border-width: 3px;
+        border: #cec8c8;
+        border-style: double;
+        padding: 1%;
+      }
+      ul.streams ul {list-style: none;}
+      ul.posts {list-style: none;}
+      ul.posts li {
+        width: 24%;
+        float: left;
+      }
+      .posts .post {
+        border-width: 3px;
+        border: #cec8c8;
+        border-style: double;
+        margin: 3%;
+        padding: 3%;
+      }
+      .wro-container {
+        overflow: auto;
+      }
+      .wro-container .wro-image-container {
+        text-align: center;
+      }
+      .wro-container .wro-image-container img {
+        width: 75%;
+      }
     </style>
   </head>
 
   <body>
     <div id="summary">
       <h1>Newsboard</h1>
+      {% if title %}
+      <h2> {{ title }}</h2>
+      {% endif %}
+      <a href="{% url "stream-list" %}">{% trans "Streams" %}</a> |
+      <a href="{% url "post-list" %}">{% trans "Posts" %}</a>
     </div>
     
     <div id="content">
