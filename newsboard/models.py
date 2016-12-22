@@ -29,6 +29,7 @@ class Stream(models.Model):
     auto_frequency = models.PositiveIntegerField(default=15, verbose_name=_("auto update frequency"), help_text=_("each x minute"))
 
     # is_public = models.BooleanField(default=False, verbose_name=_("public")
+    # is_hidden = models.BooleanField(default=False, verbose_name=_("hidden")
 
     class Meta:
         app_label = 'newsboard'

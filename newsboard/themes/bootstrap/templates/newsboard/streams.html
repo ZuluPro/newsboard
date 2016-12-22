@@ -1,0 +1,48 @@
+{% extends "newsboard/base.html" %}
+{% load i18n %}
+
+{% block newsboard_content %}
+<div class="row">
+  {% for stream in object_list %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% if stream.main_url %}
+            <a href="{{ stream.main_url }}">{{ stream.name }}</a>
+            {% else %}
+            {{ stream.name }}:
+            {% endif %}
+          </h3>
+        </div>
+
+        {% if stream.description %}
+        <div class="panel-body">
+            <p>{{ stream.description }}</p>
+        </div>
+        {% endif %}
+
+        <ul class="list-group">
+          {% for post in stream.last_posts %}
+          <li class="list-group-item">
+            <div class="media">
+              {% if post.image %}
+              <div class="media-left">
+                <img class="media-object" src="{{ post.image }}">
+              </div>
+              {% endif %}
+              <div class="media-body">
+              <a href="{{ post.url }}">{{ post.title }}</a>
+              </div>
+            </div>
+          </li>
+          {% empty %}
+          <li class="list-group-item">{% trans "No post" %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+  </ul>
+</div>
+{% endblock %}
