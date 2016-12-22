@@ -25,4 +25,8 @@ UPDATE_LIMIT = getattr(settings, 'NEWSBOARD_UPDATE_LIMIT', 25)
 
 USER_AGENT = getattr(settings, 'NEWSBOARD_USER_AGENT', DEFAULT_USER_AGENT)
 
+LOCK_CACHE = getattr(settings, 'NEWSGROUP_LOCK_CACHE', 'default')
+LOCK_TIMEOUT = getattr(settings, 'NEWSGROUP_LOCK_TIMEOUT', 30)
+LOCK_SALT = getattr(settings, 'NEWSGROUP_LOCK_SALT', None)
+
 FACEBOOK_TOKEN = getattr(settings, 'NEWSBOARD_FACEBOOK_TOKEN', None)
