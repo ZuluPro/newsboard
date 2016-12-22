@@ -14,11 +14,11 @@ from newsboard.tests import factories, utils
 
 
 class StreamTest(wro_utils.BaseWebRichObjectTestCase, TestCase):
-    def test_update(self):
+    def test_update_posts(self):
         stream = factories.StreamFactory(type='dummy')
-        stream.update()
+        stream.update_posts()
         self.assertTrue(models.Stream.objects.exists())
-    test_update.mock_attrs = {
+    test_update_posts.mock_attrs = {
         'return_value.read.return_value': '',
         'return_value.info.return_value.__dict__': wro_utils.HTML_RESPONSE_INFO
     }

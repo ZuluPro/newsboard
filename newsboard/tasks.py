@@ -17,7 +17,7 @@ def update_stream(stream_id):
         logger.debug('Locked %s' % stream)
         return
     logger.debug('Updating %s' % stream)
-    stream.update()
+    stream.update_posts()
     logger.info('Updated %s' % stream)
 
 

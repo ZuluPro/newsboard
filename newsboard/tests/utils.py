@@ -1,6 +1,5 @@
 from django import db
 from web_rich_object.tests import factories as wro_factories
-from newsboard import settings
 from newsboard import models
 from newsboard.feeds.base import BaseFeed
 
@@ -11,9 +10,9 @@ class DummyFeed(BaseFeed):
     def _get_entry_url(self, entry):
         return entry.url
 
-    def _get_entries(self):
+    def _get_entries(self, limit):
         if not self.entries:
-            self.entries = wro_factories.WebRichObjectFactory.build_batch(settings.UPDATE_LIMIT)
+            self.entries = wro_factories.WebRichObjectFactory.build_batch(limit)
         return self.entries
 
     def _get_post_attrs(self, entry):

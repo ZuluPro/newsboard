@@ -19,7 +19,7 @@ def lazy_remote_id(post):
     if post.type == 'facebook':
         return faker.numerify('############')
     elif post.type == 'sitemap':
-        return urljoin(post.url, 'sitemap.xml')
+        return urljoin(post.main_url, 'sitemap.xml')
     else:
         return urljoin(post.main_url, 'feed')
 

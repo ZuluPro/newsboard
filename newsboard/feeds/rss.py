@@ -8,9 +8,9 @@ class RssFeed(BaseFeed):
     def _get_entry_url(self, entry):
         return entry['link']
 
-    def _get_entries(self):
+    def _get_entries(self, limit):
         feed = feedparser.parse(self.stream.remote_id)
-        return feed['entries']
+        return feed['entries'][:limit]
 
     def _get_post_attrs(self, entry):
         # XXX: Do not take description from RSS

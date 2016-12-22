@@ -23,9 +23,9 @@ class FacebookFeed(BaseFeed):
     def _get_entry_url(self, entry):
         return entry['permalink_url']
 
-    def _get_entries(self):
+    def _get_entries(self, limit):
         api = get_facebook_api()
-        url = FEEDS_Q % (self.stream.remote_id, settings.UPDATE_LIMIT)
+        url = FEEDS_Q % (self.stream.remote_id, limit)
         return api.get_object(url)['feed']['data']
 
     def _get_post_attrs(self, entry):
@@ -44,10 +44,10 @@ class FacebookFeed(BaseFeed):
                 'image': entry['attachments']['data'][0]['media']['image']['src'],
             })
         elif entry['type'] == 'status':
-            attrs.update({
-                'description': entry['message'][:300],
-                'title': entry['message'][:100],
-            })
+            if 'title' in entry:
+                attrs['title'] = entry['message'][:100],
+            if 'message' in entry:
+                attrs['description'] = entry['message'][:300],
         elif entry['type'] == 'link':
             attrs.update({
                 'image': entry['attachments']['data'][0]['media']['image']['src'],

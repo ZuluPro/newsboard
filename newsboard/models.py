@@ -44,15 +44,15 @@ class Stream(models.Model):
             self._feed = feeds.get_feed(self.type)(self)
         return self._feed
 
-    def update(self):
-        self.feed.update()
+    def update_posts(self, limit=None):
+        self.feed.update(limit=limit)
 
     def last_posts(self):
-        return self.post_set.all().order_by('updated_at')[:settings.DISPLAY_LIMIT]
+        return self.post_set.all().order_by('-updated_at')[:settings.DISPLAY_LIMIT]
 
     def need_update(self):
         expiration = self.last_updated + timedelta(seconds=self.auto_frequency*60)
-        return now() >= expiration
+        return now() > expiration
 
 
 @python_2_unicode_compatible

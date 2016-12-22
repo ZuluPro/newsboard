@@ -11,7 +11,7 @@ class BaseFeed(object):
 
     def update(self, limit=None):
         limit = limit or settings.UPDATE_LIMIT
-        entries = self._get_entries()
+        entries = self._get_entries(limit=limit)
         for index, entry in enumerate(entries):
             if index > limit:
                 break

@@ -4,6 +4,7 @@ Configuration and launcher for Django Web Rich Object tests.
 import os
 import tempfile
 import dj_database_url
+from django.utils.translation import ugettext_lazy as _
 
 DEBUG = TEMPLATE_DEBUG = True
 
@@ -65,3 +66,9 @@ CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://127.0.0.1:6379/0')
 CELERY_ALWAYS_EAGER = True
 
 NEWSBOARD_FACEBOOK_TOKEN = os.environ.get('NEWSBOARD_FACEBOOK_TOKEN')
+NEWSBOARD_STREAM_TYPES = [
+    ('newsboard.feeds.rss.RssFeed', 'rss', _("RSS")),
+    ('newsboard.feeds.sitemap.SitemapFeed', 'sitemap', _("Sitemap")),
+    ('newsboard.feeds.facebook.FacebookFeed', 'facebook', _("Facebook")),
+    ('newsboard.tests.utils.DummyFeed', 'dummy', _("Dummy")),
+]
