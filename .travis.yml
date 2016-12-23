@@ -1,0 +1,40 @@
+language: python
+
+python:
+  - "2.7"
+
+env:
+  matrix:
+    - DJANGO=1.8
+    - DJANGO=1.9
+    - DJANGO=1.10
+    - DJANGO=master
+
+install:
+  - TOX_ENV=py${TRAVIS_PYTHON_VERSION}-django${DJANGO}
+  - pip install tox
+
+script:
+  - tox -e $TOX_ENV
+
+after_success:
+  - tox -e $TOX_ENV -- pip install coveralls 
+  - tox -e $TOX_ENV -- coveralls $COVERALLS_OPTION
+
+matrix:
+  fast_finish: true
+  include:
+    - python: "2.7"
+      env: ENV=lint
+      before_script: TOX_ENV=lint
+      after_success: true
+    - python: "2.7"
+      env: ENV=docs
+      before_script: TOX_ENV=docs
+      after_success: true
+    - python: "2.7"
+      env: ENV=functional
+      before_script: TOX_ENV=functional
+      install: pip install tox
+  allow_failures:
+    - env: ENV=docs
