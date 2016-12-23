@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import hashlib
 from logging import getLogger
 from celery import shared_task
-from django.core.cache import get_cache as django_get_cache
+from django.core.cache import caches
 from newsboard import models
 from newsboard import settings
 
@@ -66,7 +66,7 @@ class Lock(object):
 
     @property
     def cache(self):
-        return django_get_cache(settings.LOCK_CACHE)
+        return caches[settings.LOCK_CACHE]
 
     @property
     def is_locked(self):

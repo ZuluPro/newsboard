@@ -1,1 +1,6 @@
-pip install django-cache-url
+mock
+dj-database-url
+django-cache-url
+factory_boy
+faker
+Pillow
