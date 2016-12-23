@@ -1,0 +1,24 @@
+{% extends "newsboard/base.html" %}
+{% load i18n %}
+
+{% block newsboard_action %}
+{% if user.is_staff %}
+<form action="{{ obj.get_absolute_url }}" method="POST">
+  <input type="hidden" name="stream_id" value="{{ object.id }}">
+  <button type="submit" name="mode" value="async">{% trans "Update" %}</button>
+  <button type="submit" name="mode" value="sync">{% trans "Update sync" %}</button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block newsboard_content %}
+<ul class="posts">
+{% for post in object.last_posts %}
+  <li>
+    <div class="post">
+    {{ post.get_widget|safe }}
+    </div>
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "newsboard/base.html" %}
+
+{% block newsboard_content %}
+{{ object.get_widget|safe }}
+{% endblock %}
