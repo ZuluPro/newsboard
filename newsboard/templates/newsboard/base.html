@@ -3,7 +3,8 @@
 <html lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="robots" content="NONE,NOARCHIVE"><title>Newsbroad</title>
+    <meta name="robots" content="NONE,NOARCHIVE">
+    <title>{% if title %}{{ title }} | {% endif %}Newsbroad</title>
     <style type="text/css">
       html * { padding:0; margin:0; }
       body * { padding:10px 20px; }
@@ -35,8 +36,13 @@
         background:#eee;
         overflow: auto;
       }
-      #footer { background:#f6f6f6; }
+      #messages ul{list-style: none;}
+      #messages li{
+        padding: 5px;
+        font-weight: bold;
+      }
       #summary table { border:none; background:transparent; }
+      #footer { background:#f6f6f6; }
       ul.streams {list-style: none;}
       ul.streams>li {
         width: 22%;
@@ -66,7 +72,7 @@
         text-align: center;
       }
       .wro-container .wro-image-container img {
-        width: 75%;
+        max-width: 90%;
       }
     </style>
   </head>
@@ -75,10 +81,22 @@
     <div id="summary">
       <h1>Newsboard</h1>
       {% if title %}
-      <h2> {{ title }}</h2>
+      <h2>{{ title }}</h2>
       {% endif %}
-      <a href="{% url "stream-list" %}">{% trans "Streams" %}</a> |
-      <a href="{% url "post-list" %}">{% trans "Posts" %}</a>
+      <p>
+       <a href="{% url "stream-list" %}">{% trans "Streams" %}</a> |
+       <a href="{% url "post-list" %}">{% trans "Posts" %}</a>
+      </p>
+      <br>
+      {% block newsboard_action %}{% endblock %}
+
+      <div id="messages">
+       <ul>
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+       </ul>
+      </div>
     </div>
     
     <div id="content">
@@ -86,7 +104,7 @@
     </div>
     
     <div id="footer">
-      <p>
+      <p>Newsboard - Under BSD License</p>
     </div>
   </body>
 </html>

@@ -50,33 +50,51 @@ class FacebookFeed(BaseFeed):
             embed_video = 'https://www.facebook.com/plugins/video.php?href='
             embed_video += quote(entry['attachments']['data'][0]['url'])
             attrs.update({
-                'title': defaultfilters.truncatewords(entry['description'], 300),
                 'video': embed_video,
-                'image': entry['attachments']['data'][0]['media']['image']['src'],
                 'description': None,
             })
+            if entry.get('description'):
+                attrs['title'] = defaultfilters.truncatechars(entry['description'], 300)
+            if entry['attachments']['data'][0].get('media'):
+                if 'image' in entry['attachments']['data'][0]['media']:
+                    attrs['image'] = entry['attachments']['data'][0]['media']['image']['src']
         elif entry['type'] == 'status':
             attrs['description'] = None
             if entry.get('message'):
-                attrs['title'] = defaultfilters.truncatewords(entry['message'], 300)
+                attrs['title'] = defaultfilters.truncatechars(entry['message'], 300)
         elif entry['type'] == 'link':
             if entry.get('description'):
                 attrs['title'] = entry['description']
                 attrs['description'] = None
-            if 'media' in entry['attachments']['data'][0]:
-                if 'image' in entry['attachments']['data'][0]['media']:
-                    attrs['image'] = entry['attachments']['data'][0]['media']['image']['src']
+            if entry.get('attachments'):
+                if 'media' in entry['attachments']['data'][0]:
+                    if 'image' in entry['attachments']['data'][0]['media']:
+                        attrs['image'] = entry['attachments']['data'][0]['media']['image']['src']
         elif entry['type'] == 'photo':
             # Guess image
             if entry.get('full_picture'):
                 attrs['image'] = entry['full_picture']
             elif 'media' in entry['attachments']['data'][0]:
                 attrs['image'] = entry['attachments']['data'][0]['media']['image']['src']
-            elif 'link' in entry:
-                attrs['image'] = entry['link']
+            # Guess from obj
             if entry.get('message'):
-                attrs['description'] = None
-                attrs['title'] = defaultfilters.truncatewords(entry['message'], 300)
+                attrs['title'] = defaultfilters.truncatechars(entry['message'], 300)
+            if entry.get('description'):
+                if attrs.get('title'):
+                    attrs['description'] = entry['description']
+                else:
+                    attrs['description'] = None
+            # Guess link
+            elif 'link' in entry:
+                if entry['attachments']['data'][0]['media'].get('title'):
+                    attrs['title'] = defaultfilters.truncatechars(entry['attachments']['data'][0]['media']['title'], 300)
+                if entry.get('message'):
+                    if 'title' not in attrs:
+                        attrs['title'] = defaultfilters.truncatechars(entry['message'], 300)
+                        attrs['description'] = None
+                    else:
+                        attrs['description'] = entry['message']
+
             # Guess description
             if 'description' in entry:
                 if attrs.get('title') != entry['description']:

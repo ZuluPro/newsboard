@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
+from django.core.urlresolvers import reverse
 
 from dj_web_rich_object import models as wro_models
 
@@ -18,6 +19,7 @@ STREAM_TYPES = [(k, v) for a, k, v in settings.STREAM_TYPES]
 @python_2_unicode_compatible
 class Stream(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("name"))
+    slug = models.CharField(max_length=100, verbose_name=_("slug"))
     description = models.TextField(max_length=2000, blank=True, null=True, verbose_name=_("description"))
     type = models.CharField(max_length=20, choices=STREAM_TYPES, verbose_name=_('type'))
     remote_id = models.CharField(max_length=200, verbose_name=_("remote ID"))
@@ -39,6 +41,9 @@ class Stream(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('stream-detail', kwargs={'slug': self.slug})
+
     @property
     def feed(self):
         if not hasattr(self, '_feed'):
@@ -47,9 +52,13 @@ class Stream(models.Model):
 
     def update_posts(self, limit=None):
         self.feed.update(limit=limit)
+        self.last_updated = now()
+        self.save()
 
     def last_posts(self):
-        return self.post_set.all().order_by('-updated_at')[:settings.DISPLAY_LIMIT]
+        return self.post_set\
+            .filter(is_removed=False)\
+            .order_by('-updated_at')[:settings.DISPLAY_LIMIT]
 
     def need_update(self):
         if self.last_updated is None:
@@ -61,6 +70,7 @@ class Stream(models.Model):
 @python_2_unicode_compatible
 class Post(wro_models.WebRichObject):
     streams = models.ManyToManyField(Stream, verbose_name=_("streams"))
+    is_removed = models.BooleanField(default=False, verbose_name=_("removed"))
 
     objects = wro_models.WebRichObjectManager()
 
@@ -71,3 +81,9 @@ class Post(wro_models.WebRichObject):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'id': self.id})
+
+    def get_remove_url(self):
+        return reverse('post-remove', kwargs={'pk': self.id})

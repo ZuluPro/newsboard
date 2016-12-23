@@ -17,6 +17,14 @@
   <li>
     <div class="post">
     {{ post.get_widget|safe }}
+    <small>
+    {% if user.is_staff %}
+    <form action="{{ post.get_remove_url }}" method="POST">
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit">{% trans "Remove" %}</button>
+    </form>
+    {% endif %}
+    </small>
     </div>
   </li>
 {% endfor %}

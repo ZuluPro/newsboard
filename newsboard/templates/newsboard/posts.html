@@ -1,6 +1,15 @@
 {% extends "newsboard/base.html" %}
 {% load i18n %}
 
+{% block newsboard_action %}
+{% if user.is_staff %}
+<form action="" method="POST">
+  <button type="submit" name="mode" value="async">{% trans "Update" %}</button>
+  <button type="submit" name="mode" value="sync">{% trans "Update sync" %}</button>
+</form>
+{% endif %}
+{% endblock %}
+
 {% block newsboard_content %}
 <ul class="posts">
 {% for post in object_list %}
@@ -11,9 +20,15 @@
     <small>
       {% trans "From:" %}
       {% for stream in post.streams.all %}
-      {{ stream }}
-      {% if not forloop.last %} | {% endif %}
+        <a href="{{ stream.get_absolute_url }}">{{ stream.name }}</a>
+        {% if not forloop.last %} | {% endif %}
       {% endfor %}
+      {% if user.is_staff %}
+      <form action="{{ post.get_remove_url }}" method="POST">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">{% trans "Remove" %}</button>
+      </form>
+      {% endif %}
     </small>
     </div>
   </li>

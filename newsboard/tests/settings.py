@@ -4,6 +4,7 @@ Configuration and launcher for Django Web Rich Object tests.
 import os
 import tempfile
 import dj_database_url
+import django_cache_url
 from django.utils.translation import ugettext_lazy as _
 
 DEBUG = TEMPLATE_DEBUG = True
@@ -38,11 +39,8 @@ INSTALLED_APPS = (
 DATABASE = dj_database_url.config(default='sqlite:///test.sqlite')
 DATABASES = {'default': DATABASE}
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
+CACHE = django_cache_url.config(default='locmem://newsboard_tests')
+CACHES = {'default': CACHE}
 
 SERVER_EMAIL = 'wro@test.org'
 TEMPLATES = [
@@ -53,6 +51,7 @@ TEMPLATES = [
             'context_processors': (
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
             )
         }
     },

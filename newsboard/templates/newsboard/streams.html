@@ -1,21 +1,36 @@
 {% extends "newsboard/base.html" %}
 {% load i18n %}
 
+{% block newsboard_action %}
+{% if user.is_staff %}
+<form action="" method="POST">
+  {% for stream in object_list %}
+  <input type="hidden" name="stream_id" value="{{ stream.id }}">
+  {% endfor %}
+  <button type="submit" name="mode" value="async">{% trans "Update" %}</button>
+  <button type="submit" name="mode" value="sync">{% trans "Update sync" %}</button>
+</form>
+{% endif %}
+{% endblock %}
+
 {% block newsboard_content %}
 <ul class="streams">
 {% for stream in object_list %}
-  <li>
+   <li id="stream-{{ stream.slug }}">
     <h3>
-    {% if stream.main_url %}
-    <a href="{{ stream.main_url }}">{{ stream.name }}</a>
-    {% else %}
-    {{ stream.name }}:
-    {% endif %}
+    <a href="{{ stream.get_absolute_url }}">{{ stream.name }}</a>
+     {% if user.is_staff %}
+     <form action="" method="POST">
+       <input type="hidden" name="stream_id" value="{{ stream.id }}">
+       <button type="submit" name="mode" value="async">{% trans "Update" %}</button>
+       <button type="submit" name="mode" value="sync">{% trans "Update sync" %}</button>
+     </form>
+     {% endif %}
     </h3>
     <ul>
     {% for post in stream.last_posts %}
     <hr>
-    <li><a href="{{ post.url }}">{{ post.title|truncatechars:75 }}</a></li>
+    <li id="post-{{ post.id }}"><a href="{{ post.url }}">{{ post.title|truncatechars:75 }}</a></li>
     {% empty %}
     <li>{% trans "(Empty)" %}</li>
     {% endfor %}
