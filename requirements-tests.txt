@@ -4,3 +4,4 @@ django-cache-url
 factory_boy
 faker
 Pillow
+coverage

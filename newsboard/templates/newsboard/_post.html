@@ -1,0 +1,22 @@
+{% load i18n wro %}
+
+<li>
+  <div class="post">
+  {% get_widget post video_width="100%" %}
+
+  <small>
+    {% trans "From:" %}
+    {% for stream in post.streams.all %}
+      <a href="{{ stream.get_absolute_url }}">{{ stream.name }}</a>
+      {% if not forloop.last %} | {% endif %}
+    {% endfor %}
+    {% if user.is_staff %}
+    <form action="{{ post.get_remove_url }}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit">{% trans "Remove" %}</button>
+    </form>
+    {% endif %}
+  </small>
+  </div>
+</li>

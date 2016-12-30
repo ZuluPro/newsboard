@@ -32,7 +32,7 @@ class PostAdmin(WebRichObjectAdmin):
     def get_fieldsets(self, request, obj=None):
         fieldsets = super(WebRichObjectAdmin, self).get_fieldsets(request, obj)
         if obj is not None and ('streams', 'is_removed') not in fieldsets[0][1]['fields']:
-            fieldset = (('streams', 'is_removed'),) + fieldsets[0][1]['fields']
+            fieldset = (('streams', 'is_removed'),) + tuple(fieldsets[0][1]['fields'])
             fieldsets[0][1]['fields'] = fieldset
         return fieldsets
 

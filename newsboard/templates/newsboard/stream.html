@@ -4,6 +4,7 @@
 {% block newsboard_action %}
 {% if user.is_staff %}
 <form action="{{ obj.get_absolute_url }}" method="POST">
+  {% csrf_token %}
   <input type="hidden" name="stream_id" value="{{ object.id }}">
   <button type="submit" name="mode" value="async">{% trans "Update" %}</button>
   <button type="submit" name="mode" value="sync">{% trans "Update sync" %}</button>
@@ -14,19 +15,7 @@
 {% block newsboard_content %}
 <ul class="posts">
 {% for post in object.last_posts %}
-  <li>
-    <div class="post">
-    {{ post.get_widget|safe }}
-    <small>
-    {% if user.is_staff %}
-    <form action="{{ post.get_remove_url }}" method="POST">
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button type="submit">{% trans "Remove" %}</button>
-    </form>
-    {% endif %}
-    </small>
-    </div>
-  </li>
+  {% include "newsboard/_post.html" %}
 {% endfor %}
 </ul>
 {% endblock %}

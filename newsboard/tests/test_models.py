@@ -8,7 +8,7 @@ from web_rich_object.tests import utils as wro_utils
 from newsboard import settings
 from newsboard import models
 from newsboard.feeds.rss import RssFeed
-from newsboard.feeds.facebook import FacebookFeed
+from newsboard.feeds.facebookfeed import FacebookFeed
 from newsboard.feeds.sitemap import SitemapFeed
 from newsboard.tests import factories, utils
 

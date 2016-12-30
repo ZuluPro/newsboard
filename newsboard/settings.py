@@ -7,7 +7,7 @@ import newsboard.log
 DEFAULT_STREAM_TYPES = [
     ('newsboard.feeds.rss.RssFeed', 'rss', _("RSS")),
     ('newsboard.feeds.sitemap.SitemapFeed', 'sitemap', _("Sitemap")),
-    ('newsboard.feeds.facebook.FacebookFeed', 'facebook', _("Facebook")),
+    ('newsboard.feeds.facebookfeed.FacebookFeed', 'facebook', _("Facebook")),
 ]
 
 # Logging

@@ -9,6 +9,14 @@ class BaseFeed(object):
     def __init__(self, stream):
         self.stream = stream
 
+    def _get_entries(self, limit):
+        """Return entries in asc order and limited in number"""
+        raise NotImplementedError()
+
+    def _get_post_attrs(self, entry):
+        """Return Post attrs from an entry."""
+        raise NotImplementedError()
+
     def update(self, limit=None):
         limit = limit or settings.UPDATE_LIMIT
         entries = self._get_entries(limit=limit)

@@ -10,7 +10,10 @@ class RssFeed(BaseFeed):
 
     def _get_entries(self, limit):
         feed = feedparser.parse(self.stream.remote_id)
-        return feed['entries'][:limit]
+        entries = feed['entries'][:limit]
+        entries = sorted(entries,
+                         key=lambda x: mktime(x['published_parsed']))
+        return entries
 
     def _get_post_attrs(self, entry):
         # XXX: Do not take description from RSS

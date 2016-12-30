@@ -1,5 +1,4 @@
-facebook
 feedparser
+facebook-sdk
 django-web-rich-object
-coverage
 celery

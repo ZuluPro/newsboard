@@ -4,6 +4,7 @@
 {% block newsboard_action %}
 {% if user.is_staff %}
 <form action="" method="POST">
+  {% csrf_token %}
   {% for stream in object_list %}
   <input type="hidden" name="stream_id" value="{{ stream.id }}">
   {% endfor %}
@@ -21,6 +22,7 @@
     <a href="{{ stream.get_absolute_url }}">{{ stream.name }}</a>
      {% if user.is_staff %}
      <form action="" method="POST">
+       {% csrf_token %}
        <input type="hidden" name="stream_id" value="{{ stream.id }}">
        <button type="submit" name="mode" value="async">{% trans "Update" %}</button>
        <button type="submit" name="mode" value="sync">{% trans "Update sync" %}</button>

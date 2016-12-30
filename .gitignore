@@ -60,5 +60,5 @@ target/
 
 # IDEs
 .idea/
-*.sw[po]
+*.sw[pon]
 test.sqlite

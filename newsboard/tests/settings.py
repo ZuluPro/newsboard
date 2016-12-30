@@ -68,6 +68,6 @@ NEWSBOARD_FACEBOOK_TOKEN = os.environ.get('NEWSBOARD_FACEBOOK_TOKEN')
 NEWSBOARD_STREAM_TYPES = [
     ('newsboard.feeds.rss.RssFeed', 'rss', _("RSS")),
     ('newsboard.feeds.sitemap.SitemapFeed', 'sitemap', _("Sitemap")),
-    ('newsboard.feeds.facebook.FacebookFeed', 'facebook', _("Facebook")),
+    ('newsboard.feeds.facebookfeed.FacebookFeed', 'facebook', _("Facebook")),
     ('newsboard.tests.utils.DummyFeed', 'dummy', _("Dummy")),
 ]
